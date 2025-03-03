@@ -1,11 +1,13 @@
+import { cloudinaryStreamUpload } from "../config/cloudinaryConfig.js";
 import User from "../models/user.model.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
+import { DEFAULT_USER_IMAGE } from "../utils/constants.js";
 import CustomError from "../utils/customError.js";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcrypt";
 
 export const registerUser = asyncWrapper(async (req, res) => {
-  const { name, email, password, profilePic } = req.body;
+  const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
     throw new CustomError(400, "All fields are required");
@@ -21,8 +23,14 @@ export const registerUser = asyncWrapper(async (req, res) => {
     name,
     email,
     password: hashedPassword,
-    profilePic,
+    profilePic: DEFAULT_USER_IMAGE,
   });
+
+  // Update User profile pic
+  if (req.file) {
+    const imageURL = await cloudinaryStreamUpload(req);
+    newUser.profilePic = imageURL;
+  }
 
   await newUser.save();
 
@@ -81,6 +89,27 @@ export const getProfile = (req, res) => {
     profilePic,
   });
 };
+
+export const updateProfile = asyncWrapper(async (req, res) => {
+  const { _id } = req.user;
+
+  const { name } = req.body;
+  if (!name) throw new CustomError(400, "Name is required");
+
+  const user = User.findById(_id).select("-password");
+  if (!user) throw new CustomError(400, "User not found");
+
+  user.name = name;
+
+  if (req.file) {
+    const imageURL = await cloudinaryStreamUpload(req);
+    user.profilePic = imageURL;
+  }
+
+  await user.save();
+
+  res.status(200).json(user);
+});
 
 export const logout = (req, res) => {
   res.cookie("token", "");

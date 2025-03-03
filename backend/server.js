@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import connectDb from "./utils/db.js";
 import authRoutes from "./routers/user.router.js";
+import chatRoutes from "./routers/chat.router.js";
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Some went wrong" } = err;

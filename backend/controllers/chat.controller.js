@@ -14,7 +14,6 @@ export const createChat = asyncWrapper(async (req, res) => {
   const newChat = new Chat({
     isGroupChat: false,
     users: [user._id, otherUserId],
-    latestMessage: null,
   });
 
   await newChat.save();
@@ -35,7 +34,6 @@ export const createGroupChat = asyncWrapper(async (req, res) => {
   const newGroupChat = new Chat({
     isGroupChat: true,
     users: [user._id, ...otherUsersIds],
-    latestMessage: null,
     groupName,
     groupAdmin: user._id,
     groupProfilePic: DEFAULT_GROUP_IMAGE,
@@ -43,8 +41,8 @@ export const createGroupChat = asyncWrapper(async (req, res) => {
 
   // Update Group profile pic
   if (req.file) {
-    const imageURL = await cloudinaryStreamUpload(req);
-    newGroupChat.groupProfilePic = imageURL;
+    const response = await cloudinaryStreamUpload(req);
+    newGroupChat.groupProfilePic = response.secure_url;
   }
 
   await newGroupChat.save();
@@ -109,8 +107,8 @@ export const updateGroupChat = asyncWrapper(async (req, res) => {
 
   // Update Group profile pic
   if (req.file) {
-    const imageURL = await cloudinaryStreamUpload(req);
-    groupChat.groupProfilePic = imageURL;
+    const response = await cloudinaryStreamUpload(req);
+    groupChat.groupProfilePic = response.secure_url;
   }
 
   await groupChat.save();

@@ -8,13 +8,16 @@ cloudinary.config({
 });
 
 export const cloudinaryStreamUpload = (req) => {
-  return new Promise((reject, resolve) => {
+  return new Promise((resolve, reject) => {
     cloudinary.uploader
-      .upload_stream({ resource_type: "auto" }, (error, result) => {
-        if (error) reject(error);
+      .upload_stream(
+        { resource_type: "auto", folder: "nexachat_uploads" },
+        (error, result) => {
+          if (error) return reject(error);
 
-        resolve(result);
-      })
+          resolve(result);
+        }
+      )
       .end(req.file.buffer);
   });
 };

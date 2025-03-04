@@ -4,7 +4,7 @@ const checkIsGroupChat = function () {
   return this.isGroupChat;
 };
 
-const chatSchema = new mongoose.Schema({
+const chatSchema = new Schema({
   isGroupChat: {
     type: Boolean,
     require: true,
@@ -18,6 +18,7 @@ const chatSchema = new mongoose.Schema({
   latestMessage: {
     type: Schema.Types.ObjectId,
     ref: "Message",
+    default: null,
   },
   groupName: {
     type: String,

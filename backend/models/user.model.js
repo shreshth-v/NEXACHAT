@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DEFAULT_USER_IMAGE } from "../utils/constants.js";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,6 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePic: {
     type: String,
+    default: DEFAULT_USER_IMAGE,
   },
 });
 

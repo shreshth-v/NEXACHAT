@@ -1,7 +1,6 @@
 import { cloudinaryStreamUpload } from "../config/cloudinaryConfig.js";
 import User from "../models/user.model.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
-import { DEFAULT_USER_IMAGE } from "../utils/constants.js";
 import CustomError from "../utils/customError.js";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcrypt";
@@ -23,13 +22,12 @@ export const registerUser = asyncWrapper(async (req, res) => {
     name,
     email,
     password: hashedPassword,
-    profilePic: DEFAULT_USER_IMAGE,
   });
 
   // Update User profile pic
   if (req.file) {
-    const imageURL = await cloudinaryStreamUpload(req);
-    newUser.profilePic = imageURL;
+    const response = await cloudinaryStreamUpload(req);
+    newUser.profilePic = response.secure_url;
   }
 
   await newUser.save();
@@ -102,8 +100,8 @@ export const updateProfile = asyncWrapper(async (req, res) => {
   user.name = name;
 
   if (req.file) {
-    const imageURL = await cloudinaryStreamUpload(req);
-    user.profilePic = imageURL;
+    const response = await cloudinaryStreamUpload(req);
+    user.profilePic = response.secure_url;
   }
 
   await user.save();

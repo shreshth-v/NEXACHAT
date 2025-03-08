@@ -5,6 +5,7 @@ import connectDb from "./utils/db.js";
 import authRoutes from "./routers/user.router.js";
 import chatRoutes from "./routers/chat.router.js";
 import messageRoutes from "./routers/message.router.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -12,6 +13,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.listen(process.env.PORT, () => {
   console.log(`App is listening on PORT : ${process.env.PORT}`);

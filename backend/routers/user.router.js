@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  getProfile,
+  checkAuth,
   loginUser,
   logout,
   registerUser,
@@ -14,7 +14,7 @@ router.post("/signup", uploadImage.single("profilePic"), registerUser);
 
 router.post("/login", loginUser);
 
-router.get("/profile", verifyToken, getProfile);
+router.get("/check", verifyToken, checkAuth);
 
 router.patch(
   "/profile",

@@ -78,7 +78,7 @@ export const loginUser = asyncWrapper(async (req, res) => {
   });
 });
 
-export const getProfile = (req, res) => {
+export const checkAuth = (req, res) => {
   const { _id, name, email, profilePic } = req.user;
   res.status(200).json({
     _id,
@@ -94,7 +94,7 @@ export const updateProfile = asyncWrapper(async (req, res) => {
   const { name } = req.body;
   if (!name) throw new CustomError(400, "Name is required");
 
-  const user = User.findById(_id).select("-password");
+  const user = await User.findById(_id).select("-password");
   if (!user) throw new CustomError(400, "User not found");
 
   user.name = name;
@@ -110,6 +110,6 @@ export const updateProfile = asyncWrapper(async (req, res) => {
 });
 
 export const logout = (req, res) => {
-  res.cookie("token", "");
+  res.clearCookie("token");
   res.status(200).json({ message: "Logout Successful" });
 };

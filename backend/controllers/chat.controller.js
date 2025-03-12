@@ -11,6 +11,14 @@ export const createChat = asyncWrapper(async (req, res) => {
   if (!otherUserId)
     throw new CustomError(400, "Select atleast one user to create a chat");
 
+  const existingChat = await Chat.findOne({
+    $and: [
+      { isGroupChat: false },
+      { users: { $all: [user._id, otherUserId] } },
+    ],
+  });
+  if (existingChat) throw new CustomError(400, "Chat already exist");
+
   const newChat = new Chat({
     isGroupChat: false,
     users: [user._id, otherUserId],
@@ -119,7 +127,10 @@ export const updateGroupChat = asyncWrapper(async (req, res) => {
 export const getAllChatsOfUser = asyncWrapper(async (req, res) => {
   const user = req.user;
 
-  const allChats = await Chat.find({ users: user._id });
+  const allChats = await Chat.find({ users: user._id }).populate({
+    path: "users",
+    select: "-password",
+  });
 
   res.status(200).json(allChats);
 });

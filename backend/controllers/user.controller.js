@@ -109,6 +109,21 @@ export const updateProfile = asyncWrapper(async (req, res) => {
   res.status(200).json(user);
 });
 
+export const searchUser = asyncWrapper(async (req, res) => {
+  const { input } = req.query;
+  if (!input) return res.status(200).json([]);
+
+  const { _id: loggedInUserId } = req.user;
+
+  const users = await User.find({ name: { $regex: input, $options: "i" } });
+
+  const filteredUsers = users.filter(
+    (user) => !loggedInUserId.equals(user._id)
+  );
+
+  res.status(200).json(filteredUsers);
+});
+
 export const logout = (req, res) => {
   res.clearCookie("token");
   res.status(200).json({ message: "Logout Successful" });

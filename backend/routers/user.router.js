@@ -4,6 +4,7 @@ import {
   loginUser,
   logout,
   registerUser,
+  searchUser,
   updateProfile,
 } from "../controllers/user.controller.js";
 import verifyToken from "../middlewares/verifyToken.js";
@@ -22,6 +23,8 @@ router.patch(
   uploadImage.single("profilePic"),
   updateProfile
 );
+
+router.get("/search", verifyToken, searchUser);
 
 router.get("/logout", verifyToken, logout);
 

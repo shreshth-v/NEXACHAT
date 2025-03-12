@@ -14,9 +14,9 @@ const router = express.Router();
 
 router.get("/", verifyToken, getAllChatsOfUser);
 
-router.post("/create", verifyToken, createChat);
+router.post("/", verifyToken, createChat);
 router.post(
-  "/group/create",
+  "/group",
   verifyToken,
   uploadImage.single("groupProfilePic"),
   createGroupChat

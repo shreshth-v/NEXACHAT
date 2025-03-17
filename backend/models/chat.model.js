@@ -7,7 +7,7 @@ const checkIsGroupChat = function () {
 const chatSchema = new Schema({
   isGroupChat: {
     type: Boolean,
-    require: true,
+    required: true,
   },
   users: [
     {
@@ -22,18 +22,18 @@ const chatSchema = new Schema({
   },
   groupName: {
     type: String,
-    require: checkIsGroupChat,
+    required: checkIsGroupChat,
   },
   groupAdmin: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    require: checkIsGroupChat,
+    required: checkIsGroupChat,
   },
   groupProfilePic: {
     type: String,
-    require: checkIsGroupChat,
+    required: checkIsGroupChat,
   },
 });
 
-const Chat = new mongoose.model("Chat", chatSchema);
+const Chat = mongoose.model("Chat", chatSchema);
 export default Chat;

@@ -4,16 +4,16 @@ import { DEFAULT_USER_IMAGE } from "../utils/constants.js";
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   profilePic: {
     type: String,
@@ -21,5 +21,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = new mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;

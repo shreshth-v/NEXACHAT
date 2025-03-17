@@ -127,10 +127,18 @@ export const updateGroupChat = asyncWrapper(async (req, res) => {
 export const getAllChatsOfUser = asyncWrapper(async (req, res) => {
   const user = req.user;
 
-  const allChats = await Chat.find({ users: user._id }).populate({
-    path: "users",
-    select: "-password",
-  });
+  const allChats = await Chat.find({ users: user._id })
+    .populate({
+      path: "users",
+      select: "-password",
+    })
+    .populate({
+      path: "latestMessage",
+      populate: {
+        path: "owner",
+        select: "-password",
+      },
+    });
 
   res.status(200).json(allChats);
 });

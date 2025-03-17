@@ -21,9 +21,13 @@ const messageSchema = new Schema(
       type: String,
       default: null,
     },
+    fileName: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );
 
-const Message = new mongoose.model("Message", messageSchema);
+const Message = mongoose.model("Message", messageSchema);
 export default Message;

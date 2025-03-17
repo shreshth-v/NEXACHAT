@@ -4,13 +4,14 @@ import SideBar from "../components/SideBar";
 import CreateChatModal from "../components/modals/CreateChatModal";
 import CreateGroupChatModal from "../components/modals/CreateGroupChatModal";
 import { useSelector } from "react-redux";
+import NoActiveChat from "../components/NoActiveChat";
 
 const HomePage = () => {
   const [showCreateChatModal, setShowCreateChatModal] = useState(false);
   const [showCreateGroupChatModal, setShowCreateGroupChatModal] =
     useState(false);
 
-  const { isCreatingChat, isCreatingGroupChat } = useSelector(
+  const { activeChat, isCreatingChat, isCreatingGroupChat } = useSelector(
     (state) => state.chat
   );
 
@@ -29,7 +30,8 @@ const HomePage = () => {
         setShowCreateChatModal={setShowCreateChatModal}
         setShowCreateGroupChatModal={setShowCreateGroupChatModal}
       />
-      <ChatContainer />
+
+      {activeChat ? <ChatContainer /> : <NoActiveChat />}
 
       {showCreateChatModal && (
         <CreateChatModal setShowCreateChatModal={setShowCreateChatModal} />

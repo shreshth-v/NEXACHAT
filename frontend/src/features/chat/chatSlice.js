@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { apiClient, apiClientFileUpload } from "../../utils/apiClient";
+import { sendMessage } from "../message/messageSlice";
 
 export const createChat = createAsyncThunk(
   "chat/createChat",
@@ -45,6 +46,7 @@ export const fetchChats = createAsyncThunk(
 
 const initialState = {
   chats: [],
+  activeChat: null,
   isCreatingChat: false,
   isCreatingGroupChat: false,
   isFetchingChats: false,
@@ -54,7 +56,14 @@ const initialState = {
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
-  reducers: {},
+  reducers: {
+    setActiveChat: (state, action) => {
+      state.activeChat = action.payload;
+    },
+    removeActiveChat: (state) => {
+      state.activeChat = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // create chat
@@ -94,11 +103,24 @@ export const chatSlice = createSlice({
       .addCase(fetchChats.rejected, (state, action) => {
         state.isFetchingChats = false;
         state.error = action.payload;
+      })
+
+      // send message
+      .addCase(sendMessage.fulfilled, (state, action) => {
+        const newMessage = action.payload;
+
+        const chatIndex = state.chats.findIndex(
+          (chat) => chat._id === state.activeChat._id
+        );
+
+        if (chatIndex !== -1) {
+          state.chats[chatIndex].latestMessage = newMessage;
+        }
       });
   },
 });
 
 // Action creators are generated for each case reducer function
-// export const {} = chatSlice.actions;
+export const { setActiveChat, removeActiveChat } = chatSlice.actions;
 
 export default chatSlice.reducer;

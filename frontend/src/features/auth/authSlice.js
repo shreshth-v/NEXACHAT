@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { apiClient, apiClientFileUpload } from "../../utils/apiClient";
+import { connectSocket, disconnectSocket } from "../../utils/socket";
 
 export const signup = createAsyncThunk(
   "auth/signup",
@@ -8,6 +9,7 @@ export const signup = createAsyncThunk(
     try {
       const response = await apiClientFileUpload.post("/auth/signup", formData);
       toast.success("User registered successfully!");
+      connectSocket(response.data._id);
       return response.data;
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -22,6 +24,7 @@ export const login = createAsyncThunk(
     try {
       const response = await apiClient.post("/auth/login", formData);
       toast.success("Login successful!");
+      connectSocket(response.data._id);
       return response.data;
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -35,6 +38,7 @@ export const checkAuth = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await apiClient.get("/auth/check");
+      connectSocket(response.data._id);
       return response.data;
     } catch (error) {
       //   toast.error(error?.response?.data?.message);
@@ -49,6 +53,7 @@ export const logout = createAsyncThunk(
     try {
       const response = await apiClient.get("/auth/logout");
       toast.success(response?.data?.message);
+      disconnectSocket();
       return response.data;
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -76,6 +81,7 @@ export const updateProfile = createAsyncThunk(
 
 const initialState = {
   authUser: null,
+  onlineUsers: [],
   isSigningUp: false,
   isLoggingIn: false,
   isCheckingAuth: false,
@@ -87,7 +93,11 @@ const initialState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // signup
@@ -158,6 +168,6 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-// export const {} = authSlice.actions;
+export const { setOnlineUsers } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -10,3 +10,6 @@ export const store = configureStore({
     message: messageReducer,
   },
 });
+
+// Export store for use in non-component files
+export default store;

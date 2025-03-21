@@ -5,6 +5,7 @@ import CreateChatModal from "../components/modals/CreateChatModal";
 import CreateGroupChatModal from "../components/modals/CreateGroupChatModal";
 import { useSelector } from "react-redux";
 import NoActiveChat from "../components/NoActiveChat";
+import useSocketEvents from "../hooks/useSocketEvents";
 
 const HomePage = () => {
   const [showCreateChatModal, setShowCreateChatModal] = useState(false);
@@ -14,6 +15,8 @@ const HomePage = () => {
   const { activeChat, isCreatingChat, isCreatingGroupChat } = useSelector(
     (state) => state.chat
   );
+
+  useSocketEvents();
 
   // Loading
   if (isCreatingChat || isCreatingGroupChat) {

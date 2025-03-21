@@ -6,9 +6,10 @@ import authRoutes from "./routers/user.router.js";
 import chatRoutes from "./routers/chat.router.js";
 import messageRoutes from "./routers/message.router.js";
 import cors from "cors";
+import { app, server } from "./utils/socket.js";
 
 dotenv.config();
-const app = express();
+// const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,7 +21,7 @@ app.use(
   })
 );
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log(`App is listening on PORT : ${process.env.PORT}`);
   connectDb();
 });

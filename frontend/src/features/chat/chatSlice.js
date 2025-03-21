@@ -63,6 +63,10 @@ export const chatSlice = createSlice({
     removeActiveChat: (state) => {
       state.activeChat = null;
     },
+    setLatestMessageOfChat: (state, action) => {
+      const { chatIndex, message } = action.payload;
+      state.chats[chatIndex].latestMessage = message;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -121,6 +125,7 @@ export const chatSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setActiveChat, removeActiveChat } = chatSlice.actions;
+export const { setActiveChat, removeActiveChat, setLatestMessageOfChat } =
+  chatSlice.actions;
 
 export default chatSlice.reducer;

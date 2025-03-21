@@ -47,6 +47,9 @@ export const messageSlice = createSlice({
     removeActiveChatMessages: (state) => {
       state.activeChatMessages = [];
     },
+    addToActiveChatMessages: (state, action) => {
+      state.activeChatMessages.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,6 +83,7 @@ export const messageSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { removeActiveChatMessages } = messageSlice.actions;
+export const { removeActiveChatMessages, addToActiveChatMessages } =
+  messageSlice.actions;
 
 export default messageSlice.reducer;

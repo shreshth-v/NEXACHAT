@@ -4,7 +4,6 @@ import CustomError from "../utils/customError.js";
 const storage = new multer.memoryStorage();
 
 const filterImage = (req, file, cb) => {
-  console.log("file", file);
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {

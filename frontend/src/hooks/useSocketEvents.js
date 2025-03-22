@@ -12,7 +12,7 @@ const useSocketEvents = () => {
   useEffect(() => {
     const handleReceiveMessage = ({ chatId, message }) => {
       //  update message in active chat
-      if (activeChat._id === chatId) {
+      if (activeChat?._id === chatId) {
         dispatch(addToActiveChatMessages(message));
       }
 

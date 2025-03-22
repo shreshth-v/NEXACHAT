@@ -64,8 +64,19 @@ export const chatSlice = createSlice({
       state.activeChat = null;
     },
     setLatestMessageOfChat: (state, action) => {
+      // Used when new message is received from another user
       const { chatIndex, message } = action.payload;
+
+      // Update latest message
       state.chats[chatIndex].latestMessage = message;
+      state.chats[chatIndex].updatedAt =
+        message.createdAt || new Date().toISOString();
+
+      // Move chat to the top only if it's not already at index 0
+      if (chatIndex !== 0) {
+        const [movedChat] = state.chats.splice(chatIndex, 1);
+        state.chats.unshift(movedChat);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -118,7 +129,16 @@ export const chatSlice = createSlice({
         );
 
         if (chatIndex !== -1) {
+          // Update latest message
           state.chats[chatIndex].latestMessage = newMessage;
+          state.chats[chatIndex].updatedAt =
+            newMessage.createdAt || new Date().toISOString();
+
+          // Move chat to the top only if it's not already at index 0
+          if (chatIndex !== 0) {
+            const [movedChat] = state.chats.splice(chatIndex, 1);
+            state.chats.unshift(movedChat);
+          }
         }
       });
   },

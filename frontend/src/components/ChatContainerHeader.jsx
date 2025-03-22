@@ -4,7 +4,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { removeActiveChat } from "../features/chat/chatSlice";
 import { removeActiveChatMessages } from "../features/message/messageSlice";
 
-const ChatContainerHeader = () => {
+const ChatContainerHeader = ({ typingUser }) => {
   const { authUser, onlineUsers } = useSelector((state) => state.auth);
   const { activeChat } = useSelector((state) => state.chat);
   const otherUser = activeChat.users.find((user) => user._id !== authUser._id);
@@ -28,7 +28,14 @@ const ChatContainerHeader = () => {
         />
         <div>
           <div className="text-lg font-semibold">{otherUser.name}</div>
-          {isOnline && <div className="text-sm text-gray-300">online</div>}
+          {isOnline && !typingUser && (
+            <div className="text-sm text-gray-300">online</div>
+          )}
+          {typingUser && (
+            <div className="text-sm text-gray-300">
+              typing <span className="loading loading-dots loading-xs"></span>
+            </div>
+          )}
         </div>
       </div>
 

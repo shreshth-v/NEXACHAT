@@ -55,28 +55,16 @@ export const sendMessage = asyncWrapper(async (req, res) => {
   await message.populate("owner");
   await Chat.findByIdAndUpdate(chatId, { latestMessage: message._id });
 
-  if (chat.isGroupChat) {
-    chat.users.forEach((userId) => {
-      if (userId.toString() !== user._id.toString()) {
-        // Avoid sending to self
-        const socketId = onlineUsers.get(userId.toString());
-        if (socketId) {
-          io.to(socketId).emit("receiveMessage", { chatId, message });
-        }
-      }
-    });
-  } else {
-    const receiverId = chat.users.find(
-      (id) => id.toString() !== user._id.toString()
-    );
-
-    if (receiverId) {
-      const receiverSocketId = onlineUsers.get(receiverId.toString());
-      if (receiverSocketId) {
-        io.to(receiverSocketId).emit("receiveMessage", { chatId, message });
+  // For real time message
+  chat.users.forEach((userId) => {
+    if (userId.toString() !== user._id.toString()) {
+      // Avoid sending to self
+      const socketId = onlineUsers.get(userId.toString());
+      if (socketId) {
+        io.to(socketId).emit("receiveMessage", { chatId, message });
       }
     }
-  }
+  });
 
   res.status(200).json(message);
 });

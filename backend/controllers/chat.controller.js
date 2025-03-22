@@ -128,6 +128,9 @@ export const getAllChatsOfUser = asyncWrapper(async (req, res) => {
   const user = req.user;
 
   const allChats = await Chat.find({ users: user._id })
+    .sort({
+      updatedAt: -1,
+    })
     .populate({
       path: "users",
       select: "-password",

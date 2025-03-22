@@ -4,7 +4,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { removeActiveChat } from "../features/chat/chatSlice";
 import { removeActiveChatMessages } from "../features/message/messageSlice";
 
-const ChatHeaderContainerGroup = () => {
+const ChatHeaderContainerGroup = ({ typingUser }) => {
   const { activeChat } = useSelector((state) => state.chat);
 
   const dispatch = useDispatch();
@@ -22,7 +22,16 @@ const ChatHeaderContainerGroup = () => {
           alt=""
           className="size-12 rounded-full border border-base-300 shadow"
         />
-        <div className="text-lg font-semibold">{activeChat.groupName}</div>
+        <div>
+          <div className="text-lg font-semibold">{activeChat.groupName}</div>
+          {/* Typing */}
+          {typingUser && (
+            <div className="text-sm text-gray-300">
+              {typingUser.name} is typing{" "}
+              <span className="loading loading-dots loading-xs"></span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="text-3xl cursor-pointer" onClick={closeActiveChat}>

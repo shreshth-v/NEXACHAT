@@ -1,10 +1,11 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import { MdOutlineCameraAlt } from "react-icons/md";
 import { ImAttachment } from "react-icons/im";
 import { IoSendSharp } from "react-icons/io5";
 import { IoMdCloseCircle } from "react-icons/io";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../features/message/messageSlice";
+import { socket } from "../utils/socket";
 
 const initalMessageData = {
   text: "",
@@ -31,9 +32,14 @@ const MessageSender = () => {
     initalMessageData
   );
 
+  const { activeChat } = useSelector((state) => state.chat);
+  const { authUser } = useSelector((state) => state.auth);
+
   const dispatchRedux = useDispatch();
 
   const [previewImage, setPreviewImage] = useState(null);
+
+  const typingTimeout = useRef(null);
 
   const handleTextChange = (e) => {
     dispatch({
@@ -41,6 +47,15 @@ const MessageSender = () => {
       field: e.target.name,
       payload: e.target.value,
     });
+
+    socket.emit("typing", { chat: activeChat, user: authUser });
+
+    if (typingTimeout.current) clearInterval(typingTimeout.current);
+
+    // Stop typing is emitted is user stop typing for 1 second
+    typingTimeout.current = setTimeout(() => {
+      socket.emit("stopTyping", { chat: activeChat, user: authUser });
+    }, 1000);
   };
 
   // Upload image or file

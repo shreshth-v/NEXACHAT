@@ -1,7 +1,5 @@
 import { io } from "socket.io-client";
 import { setOnlineUsers } from "../features/auth/authSlice.js";
-import { addToActiveChatMessages } from "../features/message/messageSlice.js";
-import { setLatestMessageOfChat } from "../features/chat/chatSlice.js";
 
 export const socket = io("http://localhost:5000", {
   autoConnect: false,

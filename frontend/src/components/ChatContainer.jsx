@@ -7,7 +7,9 @@ import ChatHeaderContainerGroup from "./ChatHeaderContainerGroup";
 import { socket } from "../utils/socket";
 
 const ChatContainer = () => {
-  const { activeChat } = useSelector((state) => state.chat);
+  const { activeChat, isCreatingChat, isCreatingGroupChat } = useSelector(
+    (state) => state.chat
+  );
   const [typingUser, setTypingUser] = useState(null);
 
   // Handle typing in chat header
@@ -31,6 +33,19 @@ const ChatContainer = () => {
       socket.off("userStoppedTyping", handleUserStoppedTyping);
     };
   }, [activeChat]);
+
+  // Loading
+  if (isCreatingChat || isCreatingGroupChat) {
+    return (
+      <div className="w-3/4 p-4 ">
+        <div className="bg-base-100 w-full h-full rounded-xl flex items-center justify-center space-x-3">
+          {isCreatingChat && <div className="text-xl">Creating Chat</div>}
+          {isCreatingGroupChat && <div className="text-xl">Creating Group</div>}
+          <span className="loading loading-bars loading-lg"></span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-3/4 p-4">

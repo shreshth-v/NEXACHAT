@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { LuMessageCirclePlus } from "react-icons/lu";
 import ChatList from "./ChatList";
 
 const SideBar = ({ setShowCreateChatModal, setShowCreateGroupChatModal }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <div className="w-1/4 rounded-tl-lg rounded-bl-lg p-4 flex flex-col space-y-4 h-full">
       {/* Heading */}
       <div className="text-2xl font-bold tracking-wide">Chats</div>
 
       {/* Buttons */}
-      <div className="flex justify-center items-center space-x-2 ">
+      <div className="flex justify-center items-center space-x-1.5">
         <button
           className="btn btn-soft btn-primary w-1/2"
           onClick={() => setShowCreateChatModal(true)}
@@ -45,12 +47,18 @@ const SideBar = ({ setShowCreateChatModal, setShowCreateGroupChatModal }) => {
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" className="grow" placeholder="Search" />
+          <input
+            type="text"
+            className="grow"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </label>
       </div>
 
       {/* Chat List */}
-      <ChatList />
+      <ChatList searchTerm={searchTerm} />
     </div>
   );
 };

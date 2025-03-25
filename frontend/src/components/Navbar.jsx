@@ -29,6 +29,11 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-indigo-700 rounded-box z-1 mt-5 w-52 p-2 shadow"
             >
               <li>
+                <Link to={"/"} onClick={() => document.activeElement.blur()}>
+                  Chats
+                </Link>
+              </li>
+              <li>
                 <Link
                   to={"/profile"}
                   onClick={() => document.activeElement.blur()}

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IoMdCloseCircle } from "react-icons/io";
 import { removeActiveChat } from "../features/chat/chatSlice";
 import { removeActiveChatMessages } from "../features/message/messageSlice";
+import GroupInfoSidebar from "./GroupInfoSidebar";
 
 const ChatHeaderContainerGroup = ({ typingUser }) => {
   const { activeChat } = useSelector((state) => state.chat);
@@ -34,8 +35,14 @@ const ChatHeaderContainerGroup = ({ typingUser }) => {
         </div>
       </div>
 
-      <div className="text-3xl cursor-pointer" onClick={closeActiveChat}>
-        <IoMdCloseCircle />
+      <div className="flex space-x-3">
+        <GroupInfoSidebar />
+
+        <div className="tooltip" data-tip="Close">
+          <div className="text-3xl cursor-pointer" onClick={closeActiveChat}>
+            <IoMdCloseCircle />
+          </div>
+        </div>
       </div>
     </div>
   );

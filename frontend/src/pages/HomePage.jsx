@@ -12,20 +12,9 @@ const HomePage = () => {
   const [showCreateGroupChatModal, setShowCreateGroupChatModal] =
     useState(false);
 
-  const { activeChat, isCreatingChat, isCreatingGroupChat } = useSelector(
-    (state) => state.chat
-  );
+  const { activeChat } = useSelector((state) => state.chat);
 
   useSocketEvents();
-
-  // Loading
-  if (isCreatingChat || isCreatingGroupChat) {
-    return (
-      <div className="bg-base-300 h-full rounded-xl p-4 flex items-center justify-center">
-        <span className="loading loading-spinner text-primary loading-xl"></span>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-base-300 h-full rounded-xl flex">

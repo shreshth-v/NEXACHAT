@@ -11,10 +11,8 @@ const SearchUserResult = ({ availableUsers, handleAddUser }) => {
             handleAddUser(user);
           }}
         >
-          <div>
+          <div className="pointer-events-none flex items-center space-x-3 p-0">
             <img className="size-10 rounded-full" src={user.profilePic} />
-          </div>
-          <div className="flex items-center">
             <div>{user.name}</div>
           </div>
         </li>

@@ -90,12 +90,19 @@ const CreateGroupChatModal = ({ setShowCreateGroupChatModal }) => {
 
   const handleAddUser = (user) => {
     setSelectedUsers((currVal) => {
-      return [...currVal, user];
-    });
+      // Check if user is already selected
+      const isUserAlreadySelected = currVal.some((u) => u._id === user._id);
 
-    dispatch({
-      type: "ADD_USER",
-      payload: user._id,
+      if (!isUserAlreadySelected) {
+        dispatch({
+          type: "ADD_USER",
+          payload: user._id,
+        });
+
+        return [...currVal, user];
+      }
+
+      return currVal;
     });
 
     setAvailableUsers([]);

@@ -44,12 +44,69 @@ export const fetchChats = createAsyncThunk(
   }
 );
 
+export const updateGroupChat = createAsyncThunk(
+  "chat/updateGroupChat",
+  async (groupInfo, { getState, rejectWithValue }) => {
+    try {
+      const activeChatId = getState().chat.activeChat._id;
+      const response = await apiClientFileUpload.patch(
+        `/chat/group/${activeChatId}`,
+        groupInfo
+      );
+      toast.success("Group info updated successfully!");
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const addUsersToGroup = createAsyncThunk(
+  "chat/addUsersToGroup",
+  async (usersToAddIds, { getState, rejectWithValue }) => {
+    try {
+      const activeChatId = getState().chat.activeChat._id;
+      const response = await apiClient.patch(
+        `/chat/group/add/${activeChatId}`,
+        { usersToAddIds }
+      );
+      toast.success("User added successfully!");
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const removeUserFromGroup = createAsyncThunk(
+  "chat/removeUserFromGroup",
+  async (userToRemoveId, { getState, rejectWithValue }) => {
+    try {
+      const activeChatId = getState().chat.activeChat._id;
+      const response = await apiClient.patch(
+        `/chat/group/remove/${activeChatId}`,
+        { userToRemoveId }
+      );
+      toast.success("User removed successfully!");
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialState = {
   chats: [],
   activeChat: null,
   isCreatingChat: false,
   isCreatingGroupChat: false,
   isFetchingChats: false,
+  isUpdatingGroupChat: false,
+  isAddingUsersToGroup: false,
+  isRemovingUserFromGroup: false,
   error: null,
 };
 
@@ -87,7 +144,7 @@ export const chatSlice = createSlice({
       })
       .addCase(createChat.fulfilled, (state, action) => {
         state.isCreatingChat = false;
-        state.chats.push(action.payload);
+        state.chats.unshift(action.payload);
       })
       .addCase(createChat.rejected, (state, action) => {
         state.isCreatingChat = false;
@@ -100,7 +157,7 @@ export const chatSlice = createSlice({
       })
       .addCase(createGroupChat.fulfilled, (state, action) => {
         state.isCreatingGroupChat = false;
-        state.chats.push(action.payload);
+        state.chats.unshift(action.payload);
       })
       .addCase(createGroupChat.rejected, (state, action) => {
         state.isCreatingGroupChat = false;
@@ -140,6 +197,66 @@ export const chatSlice = createSlice({
             state.chats.unshift(movedChat);
           }
         }
+      })
+
+      // update group chat
+      .addCase(updateGroupChat.pending, (state, action) => {
+        state.isUpdatingGroupChat = true;
+      })
+      .addCase(updateGroupChat.fulfilled, (state, action) => {
+        state.isUpdatingGroupChat = false;
+
+        const updatedGroupChat = action.payload;
+
+        state.activeChat = updatedGroupChat;
+
+        state.chats = state.chats.map((chat) =>
+          chat._id === updatedGroupChat._id ? updatedGroupChat : chat
+        );
+      })
+      .addCase(updateGroupChat.rejected, (state, action) => {
+        state.isUpdatingGroupChat = false;
+        state.error = action.payload;
+      })
+
+      // add users to group chat
+      .addCase(addUsersToGroup.pending, (state, action) => {
+        state.isAddingUsersToGroup = true;
+      })
+      .addCase(addUsersToGroup.fulfilled, (state, action) => {
+        state.isAddingUsersToGroup = false;
+
+        const updatedGroupChat = action.payload;
+
+        state.activeChat = updatedGroupChat;
+
+        state.chats = state.chats.map((chat) =>
+          chat._id === updatedGroupChat._id ? updatedGroupChat : chat
+        );
+      })
+      .addCase(addUsersToGroup.rejected, (state, action) => {
+        state.isAddingUsersToGroup = false;
+        state.error = action.payload;
+      })
+
+      // remove user from group chat
+      .addCase(removeUserFromGroup.pending, (state, action) => {
+        state.isRemovingUserFromGroup = true;
+      })
+      .addCase(removeUserFromGroup.fulfilled, (state, action) => {
+        state.isRemovingUserFromGroup = false;
+
+        const updatedGroupChat = action.payload;
+
+        state.activeChat = updatedGroupChat;
+
+        state.chats = state.chats.map((chat) =>
+          chat._id === updatedGroupChat._id ? updatedGroupChat : chat
+        );
+      })
+      .addCase(removeUserFromGroup.rejected, (state, action) => {
+        state.isRemovingUserFromGroup = false;
+        state.error = action.payload;
       });
   },
 });

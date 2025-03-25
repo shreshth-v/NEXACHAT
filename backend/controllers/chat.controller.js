@@ -25,6 +25,7 @@ export const createChat = asyncWrapper(async (req, res) => {
   });
 
   await newChat.save();
+  await newChat.populate("users", "-password");
 
   res.status(201).json(newChat);
 });
@@ -54,6 +55,7 @@ export const createGroupChat = asyncWrapper(async (req, res) => {
   }
 
   await newGroupChat.save();
+  await newChat.populate("users", "-password");
 
   res.status(201).json(newGroupChat);
 });
@@ -63,7 +65,7 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
   const user = req.user;
   const { usersToAddIds } = req.body;
 
-  const groupChat = Chat.findOne({ _id: chatId });
+  const groupChat = await Chat.findOne({ _id: chatId });
   if (!groupChat) throw new CustomError((400, "Group chat does not exist"));
 
   if (!user._id.equals(groupChat.groupAdmin))
@@ -72,6 +74,14 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
   groupChat.users = [...groupChat.users, ...usersToAddIds];
 
   await groupChat.save();
+  await groupChat.populate("users", "-password");
+  await groupChat.populate({
+    path: "latestMessage",
+    populate: {
+      path: "owner",
+      select: "-password",
+    },
+  });
 
   res.status(200).json(groupChat);
 });
@@ -79,9 +89,9 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
 export const removeUserFromGroup = asyncWrapper(async (req, res) => {
   const { chatId } = req.params;
   const user = req.user;
-  const { usersToRemoveIds } = req.body;
+  const { userToRemoveId } = req.body;
 
-  const groupChat = Chat.findOne({ _id: chatId });
+  const groupChat = await Chat.findOne({ _id: chatId });
   if (!groupChat) throw new CustomError((400, "Group chat does not exist"));
 
   if (!user._id.equals(groupChat.groupAdmin))
@@ -90,12 +100,20 @@ export const removeUserFromGroup = asyncWrapper(async (req, res) => {
     );
 
   const filteredUsersIds = groupChat.users.filter(
-    (userIds) => !usersToRemoveIds.includes(userIds)
+    (userId) => !userId.equals(userToRemoveId)
   );
 
   groupChat.users = [...filteredUsersIds];
 
   await groupChat.save();
+  await groupChat.populate("users", "-password");
+  await groupChat.populate({
+    path: "latestMessage",
+    populate: {
+      path: "owner",
+      select: "-password",
+    },
+  });
 
   res.status(200).json(groupChat);
 });
@@ -105,7 +123,7 @@ export const updateGroupChat = asyncWrapper(async (req, res) => {
   const user = req.user;
   const { groupName } = req.body;
 
-  const groupChat = Chat.findOne({ _id: chatId });
+  const groupChat = await Chat.findOne({ _id: chatId });
   if (!groupChat) throw new CustomError((400, "Group chat does not exist"));
 
   if (!user._id.equals(groupChat.groupAdmin))
@@ -120,6 +138,14 @@ export const updateGroupChat = asyncWrapper(async (req, res) => {
   }
 
   await groupChat.save();
+  await groupChat.populate("users", "-password");
+  await groupChat.populate({
+    path: "latestMessage",
+    populate: {
+      path: "owner",
+      select: "-password",
+    },
+  });
 
   res.status(200).json(groupChat);
 });

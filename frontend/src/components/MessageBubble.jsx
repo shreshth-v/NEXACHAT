@@ -4,8 +4,13 @@ import { IoMdDownload } from "react-icons/io";
 
 const MessageBubble = ({ message }) => {
   const { authUser } = useSelector((state) => state.auth);
+  const { activeChat } = useSelector((state) => state.chat);
   const [isImageHovered, setIsImageHovered] = useState(false);
   const [isFileHovered, setIsFileHovered] = useState(false);
+
+  const isUserInChat = activeChat.users?.some(
+    (user) => user._id === message.owner._id
+  );
 
   // Download images and files
   const handleDownload = async (url, fileName) => {
@@ -37,7 +42,11 @@ const MessageBubble = ({ message }) => {
           />
         </div>
       </div>
-      <div className="chat-bubble chat-bubble-primary max-w-80">
+      <div
+        className={`chat-bubble  max-w-80 ${
+          isUserInChat ? "chat-bubble-primary" : "bg-gray-500"
+        }`}
+      >
         {/* image */}
         {message.image && (
           <div

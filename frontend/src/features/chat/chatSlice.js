@@ -98,6 +98,17 @@ export const removeUserFromGroup = createAsyncThunk(
   }
 );
 
+const applyGroupChatChanges = (state, groupChat) => {
+  if (state.activeChat?._id === groupChat._id) {
+    state.activeChat = groupChat;
+  }
+
+  const chatIndex = state.chats.findIndex((chat) => chat._id === groupChat._id);
+  if (chatIndex !== -1) {
+    state.chats[chatIndex] = groupChat;
+  }
+};
+
 const initialState = {
   chats: [],
   activeChat: null,
@@ -134,6 +145,39 @@ export const chatSlice = createSlice({
         const [movedChat] = state.chats.splice(chatIndex, 1);
         state.chats.unshift(movedChat);
       }
+    },
+    addNewChat: (state, action) => {
+      state.chats.unshift(action.payload);
+    },
+
+    addUsersToGroupChat: (state, action) => {
+      const { groupChat } = action.payload;
+      applyGroupChatChanges(state, groupChat);
+    },
+
+    removeUserFromGroupChat: (state, action) => {
+      const { groupChat } = action.payload;
+      applyGroupChatChanges(state, groupChat);
+    },
+
+    chatDeleteForRemovedUser: (state, action) => {
+      const { groupChat } = action.payload;
+
+      if (state.activeChat?._id === groupChat._id) {
+        state.activeChat = null;
+      }
+
+      const chatIndex = state.chats.findIndex(
+        (chat) => chat._id === groupChat._id
+      );
+      if (chatIndex !== -1) {
+        state.chats.splice(chatIndex, 1);
+      }
+    },
+
+    updateGroupChatInfo: (state, action) => {
+      const { groupChat } = action.payload;
+      applyGroupChatChanges(state, groupChat);
     },
   },
   extraReducers: (builder) => {
@@ -262,7 +306,15 @@ export const chatSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setActiveChat, removeActiveChat, setLatestMessageOfChat } =
-  chatSlice.actions;
+export const {
+  setActiveChat,
+  removeActiveChat,
+  setLatestMessageOfChat,
+  addNewChat,
+  addUsersToGroupChat,
+  removeUserFromGroupChat,
+  chatDeleteForRemovedUser,
+  updateGroupChatInfo,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;

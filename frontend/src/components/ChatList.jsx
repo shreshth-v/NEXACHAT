@@ -4,6 +4,7 @@ import { fetchChats, removeActiveChat } from "../features/chat/chatSlice";
 import ChatListSkeleton from "./skeletons/ChatListSkeleton";
 import ChatItem from "./ChatItem";
 import GroupChatItem from "./GroupChatItem";
+import useTrackChatUpdates from "../hooks/useTrackChatUpdates";
 
 const ChatList = ({ searchTerm }) => {
   const { authUser } = useSelector((state) => state.auth);
@@ -25,7 +26,7 @@ const ChatList = ({ searchTerm }) => {
   // Filtered Chats
   useEffect(() => {
     const filteredItems = chats.filter((chat) => {
-      if (chat.isGroupChat) {
+      if (chat?.isGroupChat) {
         return chat.groupName.toLowerCase().includes(searchTerm.toLowerCase());
       } else {
         const otherUser = chat.users.find((user) => user._id !== authUser?._id);
@@ -35,6 +36,8 @@ const ChatList = ({ searchTerm }) => {
 
     setFilteredChats(filteredItems);
   }, [chats, searchTerm, authUser]);
+
+  useTrackChatUpdates();
 
   if (isFetchingChats) return <ChatListSkeleton />;
 

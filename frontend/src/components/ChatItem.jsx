@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveChat } from "../features/chat/chatSlice";
 import useTypingIndicator from "../hooks/useTypingIndicator";
-import { socket } from "../utils/socket";
 import useUnreadMessage from "../hooks/useUnreadMessage";
 
 const ChatItem = ({ chat }) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import { FaCamera } from "react-icons/fa6";
@@ -27,6 +27,17 @@ const GroupInfoSidebar = () => {
   const [isGroupNameEditable, setIsGroupNameEditable] = useState(false);
 
   const dispatchRedux = useDispatch();
+
+  useEffect(() => {
+    setGroupInfo((currVal) => {
+      return {
+        ...currVal,
+        groupName: activeChat.groupName,
+      };
+    });
+
+    setPreviewImage(activeChat.groupProfilePic);
+  }, [activeChat]);
 
   const [groupInfo, setGroupInfo] = useState({
     groupName: activeChat?.groupName || "",

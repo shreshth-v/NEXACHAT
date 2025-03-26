@@ -3,6 +3,7 @@ import Chat from "../models/chat.model.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import CustomError from "../utils/customError.js";
 import { DEFAULT_GROUP_IMAGE } from "../utils/constants.js";
+import { io, onlineUsers } from "../utils/socket.js";
 
 export const createChat = asyncWrapper(async (req, res) => {
   const user = req.user;
@@ -26,6 +27,11 @@ export const createChat = asyncWrapper(async (req, res) => {
 
   await newChat.save();
   await newChat.populate("users", "-password");
+
+  const socketId = onlineUsers.get(otherUserId.toString());
+  if (socketId) {
+    io.to(socketId).emit("receiveNewChat", { newChat });
+  }
 
   res.status(201).json(newChat);
 });
@@ -55,7 +61,14 @@ export const createGroupChat = asyncWrapper(async (req, res) => {
   }
 
   await newGroupChat.save();
-  await newChat.populate("users", "-password");
+  await newGroupChat.populate("users", "-password");
+
+  otherUsersIds.forEach((userId) => {
+    const socketId = onlineUsers.get(userId.toString());
+    if (socketId) {
+      io.to(socketId).emit("receiveNewGroupChat", { newGroupChat });
+    }
+  });
 
   res.status(201).json(newGroupChat);
 });
@@ -71,6 +84,8 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
   if (!user._id.equals(groupChat.groupAdmin))
     throw new CustomError((400, "Only admin can add the users to the group"));
 
+  const alreadyExistingUserInGroup = groupChat.users;
+
   groupChat.users = [...groupChat.users, ...usersToAddIds];
 
   await groupChat.save();
@@ -81,6 +96,25 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
       path: "owner",
       select: "-password",
     },
+  });
+
+  // give the updated chat with new users
+  alreadyExistingUserInGroup.forEach((userId) => {
+    if (userId.toString() !== user._id.toString()) {
+      // Avoid sending to self (group admin)
+      const socketId = onlineUsers.get(userId.toString());
+      if (socketId) {
+        io.to(socketId).emit("usersAddedToGroupChat", { groupChat });
+      }
+    }
+  });
+
+  // create a new create for newy added users
+  usersToAddIds.forEach((userId) => {
+    const socketId = onlineUsers.get(userId.toString());
+    if (socketId) {
+      io.to(socketId).emit("receiveNewGroupChat", { newGroupChat: groupChat });
+    }
   });
 
   res.status(200).json(groupChat);
@@ -115,6 +149,23 @@ export const removeUserFromGroup = asyncWrapper(async (req, res) => {
     },
   });
 
+  // give the updated chat with removed user
+  filteredUsersIds.forEach((userId) => {
+    if (userId.toString() !== user._id.toString()) {
+      // Avoid sending to self (group admin)
+      const socketId = onlineUsers.get(userId.toString());
+      if (socketId) {
+        io.to(socketId).emit("userRemovedFromGroupChat", { groupChat });
+      }
+    }
+  });
+
+  // delete the chat for the removed user
+  const socketId = onlineUsers.get(userToRemoveId.toString());
+  if (socketId) {
+    io.to(socketId).emit("deleteChatForRemovedUser", { groupChat });
+  }
+
   res.status(200).json(groupChat);
 });
 
@@ -145,6 +196,19 @@ export const updateGroupChat = asyncWrapper(async (req, res) => {
       path: "owner",
       select: "-password",
     },
+  });
+
+  const groupChatUsersIds = groupChat.users.map((user) => user._id);
+
+  // give the updated chat to all the users in the group
+  groupChatUsersIds.forEach((userId) => {
+    if (userId.toString() !== user._id.toString()) {
+      // Avoid sending to self (group admin)
+      const socketId = onlineUsers.get(userId.toString());
+      if (socketId) {
+        io.to(socketId).emit("updateGroupChatInfo", { groupChat });
+      }
+    }
   });
 
   res.status(200).json(groupChat);

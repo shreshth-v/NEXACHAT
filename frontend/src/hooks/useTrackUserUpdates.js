@@ -17,7 +17,7 @@ const useTrackUserUpdates = () => {
     return () => {
       socket.off("userProfileUpdated", handleUserProfileUpdated);
     };
-  }, []);
+  }, [dispatch]);
 };
 
 export default useTrackUserUpdates;

@@ -57,14 +57,14 @@ const useTrackChatUpdates = () => {
     socket.on("updateGroupChatInfo", handleUpdateGroupChatInfo);
 
     return () => {
-      socket.off("receiveCreatedChat", handleReceiveNewChat);
+      socket.off("receiveNewChat", handleReceiveNewChat);
       socket.off("receiveNewGroupChat", handleReceiveNewGroupChat);
       socket.off("usersAddedToGroupChat", handleUsersAddedToGroupChat);
       socket.off("userRemovedFromGroupChat", handleUserRemovedFromGroupChat);
       socket.off("deleteChatForRemovedUser", handleDeleteChatForRemovedUser);
       socket.off("updateGroupChatInfo", handleUpdateGroupChatInfo);
     };
-  }, []);
+  }, [dispatch]);
 };
 
 export default useTrackChatUpdates;

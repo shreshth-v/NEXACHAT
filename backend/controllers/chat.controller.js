@@ -113,6 +113,7 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
   usersToAddIds.forEach((userId) => {
     const socketId = onlineUsers.get(userId.toString());
     if (socketId) {
+      console.log("creating a new chat for the user added");
       io.to(socketId).emit("receiveNewGroupChat", { newGroupChat: groupChat });
     }
   });
@@ -165,6 +166,46 @@ export const removeUserFromGroup = asyncWrapper(async (req, res) => {
   if (socketId) {
     io.to(socketId).emit("deleteChatForRemovedUser", { groupChat });
   }
+
+  res.status(200).json(groupChat);
+});
+
+export const leaveGroupChat = asyncWrapper(async (req, res) => {
+  const { chatId } = req.params;
+  const user = req.user;
+
+  const groupChat = await Chat.findOne({ _id: chatId });
+  if (!groupChat) throw new CustomError((400, "Group chat does not exist"));
+
+  const isUserPresentInChat = groupChat.users.some((userId) =>
+    userId.equals(user._id)
+  );
+  if (!isUserPresentInChat)
+    throw new CustomError((400, "User must be in the group to be removed"));
+
+  const filteredUsersIds = groupChat.users.filter(
+    (userId) => !userId.equals(user._id)
+  );
+
+  groupChat.users = [...filteredUsersIds];
+
+  await groupChat.save();
+  await groupChat.populate("users", "-password");
+  await groupChat.populate({
+    path: "latestMessage",
+    populate: {
+      path: "owner",
+      select: "-password",
+    },
+  });
+
+  // give the updated chat with removed user
+  filteredUsersIds.forEach((userId) => {
+    const socketId = onlineUsers.get(userId.toString());
+    if (socketId) {
+      io.to(socketId).emit("userRemovedFromGroupChat", { groupChat });
+    }
+  });
 
   res.status(200).json(groupChat);
 });

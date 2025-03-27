@@ -7,7 +7,7 @@ import { FaCheck } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import GroupInfoUserList from "./GroupInfoUserList";
 import AddUsersModal from "./modals/AddUsersModal";
-import { updateGroupChat } from "../features/chat/chatSlice";
+import { leaveGroupChat, updateGroupChat } from "../features/chat/chatSlice";
 
 const GroupInfoSidebar = () => {
   const {
@@ -61,6 +61,10 @@ const GroupInfoSidebar = () => {
 
   const handleUpdateGroupChat = () => {
     dispatchRedux(updateGroupChat(groupInfo));
+  };
+
+  const handleLeaveGroupChat = () => {
+    dispatchRedux(leaveGroupChat());
   };
 
   // Loading
@@ -236,6 +240,17 @@ const GroupInfoSidebar = () => {
                 onClick={handleUpdateGroupChat}
               >
                 Update group info
+              </button>
+            </div>
+          )}
+
+          {!isAuthUserGroupAdmin && (
+            <div className="flex justify-end">
+              <button
+                className="btn btn-active btn-error "
+                onClick={handleLeaveGroupChat}
+              >
+                Leave Group
               </button>
             </div>
           )}

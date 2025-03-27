@@ -4,6 +4,7 @@ import {
   createChat,
   createGroupChat,
   getAllChatsOfUser,
+  leaveGroupChat,
   removeUserFromGroup,
   updateGroupChat,
 } from "../controllers/chat.controller.js";
@@ -24,6 +25,7 @@ router.post(
 
 router.patch("/group/add/:chatId", verifyToken, addUsersToGroup);
 router.patch("/group/remove/:chatId", verifyToken, removeUserFromGroup);
+router.patch("/group/leave/:chatId", verifyToken, leaveGroupChat);
 router.patch(
   "/group/:chatId",
   verifyToken,

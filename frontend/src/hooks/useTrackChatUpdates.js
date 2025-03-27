@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { socket } from "../utils/socket";
 import {
   addNewChat,
+  addNewGroupChat,
   addUsersToGroupChat,
   chatDeleteForRemovedUser,
   removeUserFromGroupChat,
@@ -15,12 +16,12 @@ const useTrackChatUpdates = () => {
   useEffect(() => {
     // Receive new chat
     const handleReceiveNewChat = ({ newChat }) => {
-      dispatch(addNewChat(newChat));
+      dispatch(addNewChat({ newChat }));
     };
 
     // Receive new group chat
     const handleReceiveNewGroupChat = ({ newGroupChat }) => {
-      dispatch(addNewChat(newGroupChat));
+      dispatch(addNewGroupChat({ newGroupChat }));
     };
 
     // Add users to group chat
@@ -57,7 +58,7 @@ const useTrackChatUpdates = () => {
 
     return () => {
       socket.off("receiveCreatedChat", handleReceiveNewChat);
-      socket.off("receiveNewGroupChat", handleReceiveNewChat);
+      socket.off("receiveNewGroupChat", handleReceiveNewGroupChat);
       socket.off("usersAddedToGroupChat", handleUsersAddedToGroupChat);
       socket.off("userRemovedFromGroupChat", handleUserRemovedFromGroupChat);
       socket.off("deleteChatForRemovedUser", handleDeleteChatForRemovedUser);

@@ -98,6 +98,23 @@ export const removeUserFromGroup = createAsyncThunk(
   }
 );
 
+export const leaveGroupChat = createAsyncThunk(
+  "chat/leaveGroupChat",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const activeChatId = getState().chat.activeChat._id;
+      const response = await apiClient.patch(
+        `/chat/group/leave/${activeChatId}`
+      );
+      toast.success("Left group successfully!");
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const applyGroupChatChanges = (state, groupChat) => {
   if (state.activeChat?._id === groupChat._id) {
     state.activeChat = groupChat;
@@ -118,6 +135,7 @@ const initialState = {
   isUpdatingGroupChat: false,
   isAddingUsersToGroup: false,
   isRemovingUserFromGroup: false,
+  isLeavingGroupChat: false,
   error: null,
 };
 
@@ -147,7 +165,12 @@ export const chatSlice = createSlice({
       }
     },
     addNewChat: (state, action) => {
-      state.chats.unshift(action.payload);
+      const { newChat } = action.payload;
+      state.chats.unshift(newChat);
+    },
+    addNewGroupChat: (state, action) => {
+      const { newGroupChat } = action.payload;
+      state.chats.unshift(newGroupChat);
     },
 
     addUsersToGroupChat: (state, action) => {
@@ -325,6 +348,30 @@ export const chatSlice = createSlice({
       .addCase(removeUserFromGroup.rejected, (state, action) => {
         state.isRemovingUserFromGroup = false;
         state.error = action.payload;
+      })
+
+      // leave group chat
+      .addCase(leaveGroupChat.pending, (state, action) => {
+        state.isLeavingGroupChat = true;
+      })
+      .addCase(leaveGroupChat.fulfilled, (state, action) => {
+        state.isLeavingGroupChat = false;
+
+        const updatedGroupChat = action.payload;
+
+        state.activeChat = null;
+
+        const chatIndex = state.chats.findIndex(
+          (chat) => chat._id === updatedGroupChat._id
+        );
+
+        if (chatIndex !== -1) {
+          state.chats.splice(chatIndex, 1);
+        }
+      })
+      .addCase(leaveGroupChat.rejected, (state, action) => {
+        state.isLeavingGroupChat = false;
+        state.error = action.payload;
       });
   },
 });
@@ -335,6 +382,7 @@ export const {
   removeActiveChat,
   setLatestMessageOfChat,
   addNewChat,
+  addNewGroupChat,
   addUsersToGroupChat,
   removeUserFromGroupChat,
   chatDeleteForRemovedUser,

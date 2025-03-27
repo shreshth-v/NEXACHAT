@@ -7,7 +7,7 @@ const useUnreadMessage = (chat, setUnreadMessageCount) => {
 
   useEffect(() => {
     const handleNewMessage = ({ chatId, message }) => {
-      if (chat._id !== activeChat._id) {
+      if (chat._id !== activeChat?._id) {
         if (chatId === chat._id) {
           setUnreadMessageCount((currVal) => currVal + 1);
         }

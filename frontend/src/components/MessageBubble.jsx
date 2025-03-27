@@ -42,6 +42,9 @@ const MessageBubble = ({ message }) => {
           />
         </div>
       </div>
+      {activeChat.isGroupChat && (
+        <div className="chat-header opacity-50">{message.owner.name}</div>
+      )}
       <div
         className={`chat-bubble  max-w-80 ${
           isUserInChat ? "chat-bubble-primary" : "bg-gray-500"

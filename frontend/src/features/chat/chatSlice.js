@@ -179,6 +179,30 @@ export const chatSlice = createSlice({
       const { groupChat } = action.payload;
       applyGroupChatChanges(state, groupChat);
     },
+
+    updateUserProfileInChats: (state, action) => {
+      const { user } = action.payload;
+
+      const chatsWithUpdatedUser = state.chats.map((chat) => {
+        const indexOfPresentUser = chat.users.findIndex((chatUser) => {
+          return chatUser._id === user._id;
+        });
+
+        if (indexOfPresentUser !== -1) {
+          // if the chat containing the user is activeChat
+          if (state.activeChat?._id === chat._id) {
+            state.activeChat.users[indexOfPresentUser] = user;
+          }
+
+          chat.users[indexOfPresentUser] = user;
+          return chat;
+        } else {
+          return chat;
+        }
+      });
+
+      state.chats = chatsWithUpdatedUser;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -315,6 +339,7 @@ export const {
   removeUserFromGroupChat,
   chatDeleteForRemovedUser,
   updateGroupChatInfo,
+  updateUserProfileInChats,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

@@ -5,6 +5,7 @@ import ChatListSkeleton from "./skeletons/ChatListSkeleton";
 import ChatItem from "./ChatItem";
 import GroupChatItem from "./GroupChatItem";
 import useTrackChatUpdates from "../hooks/useTrackChatUpdates";
+import useTrackUserUpdates from "../hooks/useTrackUserUpdates";
 
 const ChatList = ({ searchTerm }) => {
   const { authUser } = useSelector((state) => state.auth);
@@ -38,6 +39,8 @@ const ChatList = ({ searchTerm }) => {
   }, [chats, searchTerm, authUser]);
 
   useTrackChatUpdates();
+
+  useTrackUserUpdates();
 
   if (isFetchingChats) return <ChatListSkeleton />;
 

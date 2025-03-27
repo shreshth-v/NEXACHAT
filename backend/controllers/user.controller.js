@@ -1,9 +1,11 @@
 import { cloudinaryStreamUpload } from "../config/cloudinaryConfig.js";
+import Chat from "../models/chat.model.js";
 import User from "../models/user.model.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import CustomError from "../utils/customError.js";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcrypt";
+import { io, onlineUsers } from "../utils/socket.js";
 
 export const registerUser = asyncWrapper(async (req, res) => {
   const { name, email, password } = req.body;
@@ -105,6 +107,26 @@ export const updateProfile = asyncWrapper(async (req, res) => {
   }
 
   await user.save();
+
+  // Fetch all chats where the current user is present
+  const allChats = await Chat.find({ users: user._id });
+
+  const otherUsers = new Set();
+
+  allChats.forEach((chat) => {
+    chat.users.forEach((userId) => {
+      if (userId.toString() !== user._id.toString()) {
+        otherUsers.add(userId.toString());
+      }
+    });
+  });
+
+  otherUsers.forEach((userId) => {
+    const socketId = onlineUsers.get(userId);
+    if (socketId) {
+      io.to(socketId).emit("userProfileUpdated", { user });
+    }
+  });
 
   res.status(200).json(user);
 });

@@ -24,7 +24,6 @@ export const createChat = asyncWrapper(async (req, res) => {
   const newChat = new Chat({
     isGroupChat: false,
     users: [user._id, otherUserId],
-    aiChat: false,
   });
 
   const otherUser = await User.findById(otherUserId);
@@ -61,7 +60,6 @@ export const createGroupChat = asyncWrapper(async (req, res) => {
     groupName,
     groupAdmin: user._id,
     groupProfilePic: DEFAULT_GROUP_IMAGE,
-    aiChat: false,
   });
 
   // Update Group profile pic
@@ -123,7 +121,6 @@ export const addUsersToGroup = asyncWrapper(async (req, res) => {
   usersToAddIds.forEach((userId) => {
     const socketId = onlineUsers.get(userId.toString());
     if (socketId) {
-      console.log("creating a new chat for the user added");
       io.to(socketId).emit("receiveNewGroupChat", { newGroupChat: groupChat });
     }
   });

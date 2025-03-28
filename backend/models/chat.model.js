@@ -36,6 +36,7 @@ const chatSchema = new Schema(
     },
     aiChat: {
       type: Boolean,
+      default: false,
       required: true,
     },
   },

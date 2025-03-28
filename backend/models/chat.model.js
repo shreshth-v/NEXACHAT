@@ -34,6 +34,10 @@ const chatSchema = new Schema(
       type: String,
       required: checkIsGroupChat,
     },
+    aiChat: {
+      type: Boolean,
+      required: true,
+    },
   },
   { timestamps: true }
 );

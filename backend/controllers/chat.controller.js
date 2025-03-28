@@ -4,6 +4,7 @@ import asyncWrapper from "../utils/asyncWrapper.js";
 import CustomError from "../utils/customError.js";
 import { DEFAULT_GROUP_IMAGE } from "../utils/constants.js";
 import { io, onlineUsers } from "../utils/socket.js";
+import User from "../models/user.model.js";
 
 export const createChat = asyncWrapper(async (req, res) => {
   const user = req.user;
@@ -23,7 +24,15 @@ export const createChat = asyncWrapper(async (req, res) => {
   const newChat = new Chat({
     isGroupChat: false,
     users: [user._id, otherUserId],
+    aiChat: false,
   });
+
+  const otherUser = await User.findById(otherUserId);
+  if (!otherUser) throw new CustomError(400, "Select user does not exist");
+
+  if (otherUser.name === "Ask AI") {
+    newChat.aiChat = true;
+  }
 
   await newChat.save();
   await newChat.populate("users", "-password");
@@ -52,6 +61,7 @@ export const createGroupChat = asyncWrapper(async (req, res) => {
     groupName,
     groupAdmin: user._id,
     groupProfilePic: DEFAULT_GROUP_IMAGE,
+    aiChat: false,
   });
 
   // Update Group profile pic

@@ -7,6 +7,7 @@ import chatRoutes from "./routers/chat.router.js";
 import messageRoutes from "./routers/message.router.js";
 import cors from "cors";
 import { app, server } from "./utils/socket.js";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 // const app = express();

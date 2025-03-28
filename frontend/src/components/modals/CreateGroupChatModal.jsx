@@ -59,7 +59,12 @@ const CreateGroupChatModal = ({ setShowCreateGroupChatModal }) => {
   useEffect(() => {
     const searchUsers = setTimeout(async () => {
       const response = await apiClient.get(`auth/search?input=${searchValue}`);
-      setAvailableUsers(response.data);
+
+      const usersExceptAI = response.data.filter(
+        (user) => user.name !== "Ask AI"
+      );
+
+      setAvailableUsers(usersExceptAI);
     }, 500);
 
     return () => clearTimeout(searchUsers);

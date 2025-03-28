@@ -46,7 +46,7 @@ const MessageBubble = ({ message }) => {
         <div className="chat-header opacity-50">{message.owner.name}</div>
       )}
       <div
-        className={`chat-bubble  max-w-80 ${
+        className={`chat-bubble  max-w-100 ${
           isUserInChat ? "chat-bubble-primary" : "bg-gray-500"
         }`}
       >

@@ -4,7 +4,7 @@ import { ImAttachment } from "react-icons/im";
 import { IoSendSharp } from "react-icons/io5";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { sendMessage } from "../features/message/messageSlice";
+import { sendMessage, sendMessageToAi } from "../features/message/messageSlice";
 import { socket } from "../utils/socket";
 
 const initalMessageData = {
@@ -100,7 +100,12 @@ const MessageSender = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    dispatchRedux(sendMessage(messageData));
+
+    if (activeChat.aiChat) {
+      dispatchRedux(sendMessageToAi(messageData.text));
+    } else {
+      dispatchRedux(sendMessage(messageData));
+    }
 
     dispatch({
       type: "HANDLE_INPUT_CHANGE",
@@ -139,18 +144,23 @@ const MessageSender = () => {
         <input
           type="text"
           placeholder="Type a message"
-          className="input input-primary w-9/10"
+          className="input input-primary w-full"
           name="text"
           value={messageData.text}
           onChange={handleTextChange}
         />
 
-        <label htmlFor="file">
-          <MdOutlineCameraAlt className="cursor-pointer" />
-        </label>
-        <label htmlFor="file">
-          <ImAttachment className="cursor-pointer" />
-        </label>
+        {!activeChat.aiChat && (
+          <label htmlFor="file">
+            <MdOutlineCameraAlt className="cursor-pointer" />
+          </label>
+        )}
+
+        {!activeChat.aiChat && (
+          <label htmlFor="file">
+            <ImAttachment className="cursor-pointer" />
+          </label>
+        )}
 
         {/* Image and file input */}
         <input

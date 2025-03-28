@@ -4,6 +4,9 @@ import Message from "../models/message.model.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import CustomError from "../utils/customError.js";
 import { io, onlineUsers } from "../utils/socket.js";
+import { GoogleGenAI } from "@google/genai";
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export const getMessages = asyncWrapper(async (req, res) => {
   const { chatId } = req.params;
@@ -67,4 +70,57 @@ export const sendMessage = asyncWrapper(async (req, res) => {
   });
 
   res.status(200).json(message);
+});
+
+const generateAiResponse = asyncWrapper(async (user, chat, text) => {
+  const chatId = chat._id;
+
+  const aiId = chat.users.find((id) => id.toString() !== user._id.toString());
+
+  const aiResponse = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: text,
+  });
+
+  const message = new Message({
+    owner: aiId,
+    chat: chatId,
+    text: aiResponse.text.replace(/\*/g, ""),
+  });
+
+  await message.save();
+  await message.populate("owner");
+
+  await Chat.findByIdAndUpdate(chatId, { latestMessage: message._id });
+
+  const socketId = onlineUsers.get(user._id.toString());
+  if (socketId) {
+    io.to(socketId).emit("receiveMessage", { chatId, message });
+  }
+});
+
+export const sendMessageToAi = asyncWrapper(async (req, res) => {
+  const user = req.user;
+
+  const { chatId } = req.params;
+  if (!chatId) throw new CustomError(400, "Chat id not found");
+
+  const { text } = req.body;
+
+  const chat = await Chat.findById(chatId);
+  if (!chat) throw new CustomError(404, "Chat not found");
+
+  const message = new Message({
+    owner: user._id,
+    chat: chatId,
+    text,
+  });
+
+  await message.save();
+  await message.populate("owner");
+  await Chat.findByIdAndUpdate(chatId, { latestMessage: message._id });
+
+  res.status(200).json(message);
+
+  generateAiResponse(user, chat, text);
 });

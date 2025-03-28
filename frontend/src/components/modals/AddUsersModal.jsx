@@ -21,7 +21,12 @@ const AddUsersModal = ({ setshowAddUsersModal }) => {
   useEffect(() => {
     const searchUsers = setTimeout(async () => {
       const response = await apiClient.get(`auth/search?input=${searchValue}`);
-      const fetchedUsers = response.data;
+
+      const usersExceptAI = response.data.filter(
+        (user) => user.name !== "Ask AI"
+      );
+
+      const fetchedUsers = usersExceptAI;
 
       const activeChatUserIds = new Set(
         activeChat.users.map((user) => user._id)

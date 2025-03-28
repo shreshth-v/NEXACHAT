@@ -33,10 +33,27 @@ export const getMessages = createAsyncThunk(
   }
 );
 
+export const sendMessageToAi = createAsyncThunk(
+  "message/sendMessageToAi",
+  async (text, { getState, rejectWithValue }) => {
+    try {
+      const activeChatId = getState().chat.activeChat._id;
+      const response = await apiClient.post(`/message/ai/${activeChatId}`, {
+        text,
+      });
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialState = {
   activeChatMessages: [],
   isSendingMessage: false,
   isGettingMessages: false,
+  isSendingMessageToAi: false,
   error: null,
 };
 
@@ -77,6 +94,19 @@ export const messageSlice = createSlice({
       })
       .addCase(getMessages.rejected, (state, action) => {
         state.isGettingMessages = false;
+        state.error = action.payload;
+      })
+
+      // send message to Ai
+      .addCase(sendMessageToAi.pending, (state, action) => {
+        state.isSendingMessageToAi = true;
+      })
+      .addCase(sendMessageToAi.fulfilled, (state, action) => {
+        state.isSendingMessageToAi = false;
+        state.activeChatMessages.push(action.payload);
+      })
+      .addCase(sendMessageToAi.rejected, (state, action) => {
+        state.isSendingMessageToAi = false;
         state.error = action.payload;
       });
   },

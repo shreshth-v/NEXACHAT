@@ -48,7 +48,9 @@ const ChatItem = ({ chat }) => {
             {chat?.latestMessage?.owner._id === authUser._id && (
               <span>You: </span>
             )}
-            {chat?.latestMessage?.text}
+            {chat?.latestMessage?.text?.length > 30
+              ? `${chat.latestMessage.text.slice(0, 30)}...`
+              : chat.latestMessage?.text}
           </div>
         )}
         {/* Typing */}

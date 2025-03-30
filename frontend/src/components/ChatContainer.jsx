@@ -37,7 +37,7 @@ const ChatContainer = () => {
   // Loading
   if (isCreatingChat || isCreatingGroupChat) {
     return (
-      <div className="w-3/4 p-4 ">
+      <div className={`p-4 ${!activeChat ? "hidden" : "w-full"} sm:flex-1`}>
         <div className="bg-base-100 w-full h-full rounded-xl flex items-center justify-center space-x-3">
           {isCreatingChat && <div className="text-xl">Creating Chat</div>}
           {isCreatingGroupChat && <div className="text-xl">Creating Group</div>}
@@ -48,7 +48,7 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="w-3/4 p-4">
+    <div className={`p-4 ${!activeChat ? "hidden" : "w-full"} sm:flex-1`}>
       <div className="bg-base-100 w-full h-full rounded-xl flex flex-col">
         {activeChat.isGroupChat ? (
           <ChatHeaderContainerGroup typingUser={typingUser} />

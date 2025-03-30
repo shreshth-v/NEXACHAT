@@ -120,7 +120,7 @@ const MessageSender = () => {
     <div className="px-6 py-2 h-1/8 rounded-bl-xl rounded-br-xl">
       <form
         onSubmit={handleFormSubmit}
-        className="flex items-center text-xl space-x-3 relative"
+        className="flex items-center text-xl space-x-3 relative pt-3 sm:pt-0"
       >
         {/* Image and File Preview */}
         {previewImage && (

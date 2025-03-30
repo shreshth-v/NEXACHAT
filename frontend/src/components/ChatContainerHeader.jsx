@@ -24,22 +24,27 @@ const ChatContainerHeader = ({ typingUser }) => {
         <img
           src={otherUser.profilePic}
           alt=""
-          className="size-12 rounded-full border border-base-300 shadow"
+          className="size-10 sm:size-12 rounded-full border border-base-300 shadow"
         />
         <div>
-          <div className="text-lg font-semibold">{otherUser.name}</div>
+          <div className="text-md sm:text-lg font-semibold">
+            {otherUser.name}
+          </div>
           {isOnline && !typingUser && (
             <div className="text-sm text-gray-300">online</div>
           )}
           {typingUser && (
-            <div className="text-sm text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-300">
               typing <span className="loading loading-dots loading-xs"></span>
             </div>
           )}
         </div>
       </div>
 
-      <div className="text-3xl cursor-pointer" onClick={closeActiveChat}>
+      <div
+        className="text-2xl sm:text-3xl cursor-pointer"
+        onClick={closeActiveChat}
+      >
         <IoMdCloseCircle />
       </div>
     </div>

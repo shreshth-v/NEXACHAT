@@ -148,7 +148,7 @@ const CreateGroupChatModal = ({ setShowCreateGroupChatModal }) => {
           />
           <label
             htmlFor="profilePic"
-            className="absolute bottom-0 left-63 text-lg bg-indigo-500 rounded-full p-2"
+            className="absolute bottom-0 translate-x-10 sm:translate-x-0 sm:left-63 text-lg bg-indigo-500 rounded-full p-2"
           >
             <FaCamera />
           </label>
@@ -181,8 +181,7 @@ const CreateGroupChatModal = ({ setShowCreateGroupChatModal }) => {
             value={groupInfo.groupName}
           />
           <p className="validator-hint">
-            Group name must be 3 to 30 characters containing only letters,
-            numbers or dash
+            Name must contain atleast 3 letters, numbers or dash
           </p>
         </div>
 

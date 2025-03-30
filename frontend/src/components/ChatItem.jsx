@@ -33,10 +33,10 @@ const ChatItem = ({ chat }) => {
         setUnreadMessageCount(0);
       }}
     >
-      <div className="indicator indicator-bottom relative">
+      <div className="indicator indicator-start relative">
         <img className="size-10 rounded-full" src={otherUser.profilePic} />
         {isOnline && (
-          <span className="indicator-item status status-success absolute mb-1.5 mr-1"></span>
+          <span className="indicator-item status status-success absolute"></span>
         )}
       </div>
 
@@ -48,9 +48,11 @@ const ChatItem = ({ chat }) => {
             {chat?.latestMessage?.owner._id === authUser._id && (
               <span>You: </span>
             )}
-            {chat?.latestMessage?.text?.length > 30
-              ? `${chat.latestMessage.text.slice(0, 30)}...`
-              : chat.latestMessage?.text}
+            {chat?.latestMessage?.text
+              ? chat.latestMessage.text.length > 30
+                ? `${chat.latestMessage.text.slice(0, 30)}...`
+                : chat.latestMessage.text
+              : chat.latestMessage?.fileName || ""}
           </div>
         )}
         {/* Typing */}

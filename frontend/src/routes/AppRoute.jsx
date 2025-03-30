@@ -1,4 +1,4 @@
-import { Navigate, BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import LoginPage from "../pages/LoginPage";
@@ -37,7 +37,7 @@ const AppRoute = () => {
         <Navbar />
 
         {/* This div contain all the pages */}
-        <div className="w-full flex-1 px-20 py-14">
+        <div className="w-full flex-1 md:px-10 lg:px-20 sm:py-10 md:py-14 overflow-hidden">
           <Routes>
             <Route
               path="/"

@@ -45,7 +45,7 @@ const ChatList = ({ searchTerm }) => {
   if (isFetchingChats) return <ChatListSkeleton />;
 
   return (
-    <ul className="list bg-base-100 rounded-box shadow-md max-h-90 overflow-auto">
+    <ul className="list bg-base-100 rounded-box shadow-md max-h-108 sm:max-h-90 overflow-auto">
       {filteredChats.map((chat) => {
         return chat.isGroupChat ? (
           <GroupChatItem key={chat._id} chat={chat} />

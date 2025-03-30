@@ -57,7 +57,7 @@ const MessagesContainer = () => {
 
   return (
     <div
-      className="flex-1 px-5 py-4 max-h-100 overflow-auto"
+      className="flex-1 px-5 py-4 max-h-128 sm:max-h-108 md:max-h-100 overflow-auto"
       ref={messageContainer}
     >
       {activeChatMessages.map((message) => (

@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatListSkeleton = () => {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8 sm:gap-6">
       <div className="flex items-center gap-4">
         <div className="skeleton h-12 w-12 shrink-0 rounded-full bg-neutral"></div>
         <div className="flex flex-col gap-4">

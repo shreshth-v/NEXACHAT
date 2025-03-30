@@ -34,7 +34,7 @@ const MessageBubble = ({ message }) => {
       }`}
       key={message._id}
     >
-      <div className="chat-image avatar">
+      <div className="chat-image avatar size-8 sm:size-10">
         <div className="w-10 rounded-full">
           <img
             alt="Tailwind CSS chat bubble component"
@@ -46,7 +46,7 @@ const MessageBubble = ({ message }) => {
         <div className="chat-header opacity-50">{message.owner.name}</div>
       )}
       <div
-        className={`chat-bubble  max-w-100 ${
+        className={`chat-bubble max-w-50 sm:max-w-55 md:max-w-70 lg:max-w-100 text-xs sm:text-base ${
           isUserInChat ? "chat-bubble-primary" : "bg-gray-500"
         }`}
       >

@@ -21,13 +21,15 @@ const ChatHeaderContainerGroup = ({ typingUser }) => {
         <img
           src={activeChat.groupProfilePic}
           alt=""
-          className="size-12 rounded-full border border-base-300 shadow"
+          className="size-10 sm:size-12 rounded-full border border-base-300 shadow"
         />
         <div>
-          <div className="text-lg font-semibold">{activeChat.groupName}</div>
+          <div className="text-md sm:text-lg font-semibold">
+            {activeChat.groupName}
+          </div>
           {/* Typing */}
           {typingUser && (
-            <div className="text-sm text-gray-300">
+            <div className="text-xs sm:text-sm text-gray-300">
               {typingUser.name} is typing{" "}
               <span className="loading loading-dots loading-xs"></span>
             </div>
@@ -35,11 +37,14 @@ const ChatHeaderContainerGroup = ({ typingUser }) => {
         </div>
       </div>
 
-      <div className="flex space-x-3">
+      <div className="flex space-x-3 items-center justify-center">
         <GroupInfoSidebar />
 
         <div className="tooltip" data-tip="Close">
-          <div className="text-3xl cursor-pointer" onClick={closeActiveChat}>
+          <div
+            className="text-2xl sm:text-3xl cursor-pointer"
+            onClick={closeActiveChat}
+          >
             <IoMdCloseCircle />
           </div>
         </div>

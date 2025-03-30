@@ -62,12 +62,12 @@ const LoginPage = () => {
         <div className="relative">
           {isPasswordHidden ? (
             <IoEye
-              className="absolute right-6 top-3 text-gray-400 cursor-pointer z-10"
+              className="absolute right-4 top-3 text-gray-400 cursor-pointer z-10"
               onClick={() => setIsPasswordHidden(false)}
             />
           ) : (
             <IoEyeOff
-              className="absolute right-6 top-3 text-gray-400 cursor-pointer z-10"
+              className="absolute right-4 top-3 text-gray-400 cursor-pointer z-10"
               onClick={() => setIsPasswordHidden(true)}
             />
           )}
@@ -84,12 +84,12 @@ const LoginPage = () => {
             value={formData.password}
           />
           <p className="validator-hint">
-            Must be more than 6 characters, including at least one number
+            Must be more than 6 characters, and at least one number
           </p>
         </div>
 
         {/* Submit Button  */}
-        <div className="px-1.5 mb-4">
+        <div className="mb-4">
           <button className="btn btn-primary w-full">Login</button>
         </div>
 

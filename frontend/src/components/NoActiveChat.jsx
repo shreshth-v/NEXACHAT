@@ -3,14 +3,14 @@ import { GrChatOption } from "react-icons/gr";
 import { useSelector } from "react-redux";
 
 const NoActiveChat = () => {
-  const { isCreatingChat, isCreatingGroupChat } = useSelector(
+  const { activeChat, isCreatingChat, isCreatingGroupChat } = useSelector(
     (state) => state.chat
   );
 
   // Loading
   if (isCreatingChat || isCreatingGroupChat) {
     return (
-      <div className="w-3/4 p-4 ">
+      <div className={`sm:flex-1 p-4`}>
         <div className="bg-base-100 w-full h-full rounded-xl flex items-center justify-center space-x-3">
           {isCreatingChat && <div className="text-xl">Creating Chat</div>}
           {isCreatingGroupChat && <div className="text-xl">Creating Group</div>}
@@ -21,7 +21,7 @@ const NoActiveChat = () => {
   }
 
   return (
-    <div className="w-3/4 p-4">
+    <div className={`sm:flex-1 p-4 hidden sm:block`}>
       <div className="bg-base-100 w-full h-full rounded-xl flex flex-col space-y-4 justify-center items-center">
         <div className="text-4xl font-semibold">No chat selected</div>
         <div className="text-5xl">

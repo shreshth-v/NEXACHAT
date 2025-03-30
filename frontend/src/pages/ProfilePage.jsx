@@ -55,11 +55,11 @@ const ProfilePage = () => {
           <img
             src={previewImage}
             alt=""
-            className="w-28 h-28 rounded-full border-2 border-white"
+            className="size-28 rounded-full border-2 border-white"
           />
           <label
             htmlFor="profilePic"
-            className="absolute bottom-0 left-50 text-lg bg-indigo-500 rounded-full p-2"
+            className="absolute bottom-0 left-43 text-lg bg-indigo-500 rounded-full p-2"
           >
             <FaCamera />
           </label>
@@ -92,7 +92,7 @@ const ProfilePage = () => {
             value={formData.name}
           />
           <p className="validator-hint">
-            Must be 3 to 30 characters containing only letters, numbers or dash
+            Name must contain atleast 3 letters, numbers or dash
           </p>
         </div>
 
@@ -112,7 +112,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Submit Button  */}
-        <div className="px-5 mb-4">
+        <div className="mb-4">
           <button className="btn btn-primary w-full">Update Porfile</button>
         </div>
       </form>

@@ -60,11 +60,11 @@ const SignupPage = () => {
           <img
             src={previewImage}
             alt=""
-            className="w-28 h-28 rounded-full border-2 border-white"
+            className="size-28 rounded-full border-2 border-white"
           />
           <label
             htmlFor="profilePic"
-            className="absolute bottom-0 left-50 text-lg bg-indigo-500 rounded-full p-2"
+            className="absolute bottom-0 left-45 text-lg bg-indigo-500 rounded-full p-2"
           >
             <FaCamera />
           </label>
@@ -90,14 +90,13 @@ const SignupPage = () => {
             placeholder="Name"
             pattern="[A-Za-z][A-Za-z0-9\- ]*"
             minLength="3"
-            maxLength="30"
             title="Only letters, numbers or dash"
             name="name"
             onChange={handleFormChange}
             value={formData.name}
           />
           <p className="validator-hint">
-            Must be 3 to 30 characters containing only letters, numbers or dash
+            Name must contain atleast 3 letters, numbers or dash
           </p>
         </div>
 
@@ -119,12 +118,12 @@ const SignupPage = () => {
         <div className="relative">
           {isPasswordHidden ? (
             <IoEye
-              className="absolute right-8 top-3 text-gray-400 cursor-pointer z-10"
+              className="absolute right-4 top-3 text-gray-400 cursor-pointer z-10"
               onClick={() => setIsPasswordHidden(false)}
             />
           ) : (
             <IoEyeOff
-              className="absolute right-8 top-3 text-gray-400 cursor-pointer z-10"
+              className="absolute right-4 top-3 text-gray-400 cursor-pointer z-10"
               onClick={() => setIsPasswordHidden(true)}
             />
           )}
@@ -141,12 +140,12 @@ const SignupPage = () => {
             value={formData.password}
           />
           <p className="validator-hint">
-            Must be more than 6 characters, including at least one number
+            Must be more than 6 characters, and at least one number
           </p>
         </div>
 
         {/* Submit Button  */}
-        <div className="px-5 mb-4">
+        <div className="mb-4">
           <button className="btn btn-primary w-full">Create an account</button>
         </div>
 

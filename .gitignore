@@ -5,3 +5,17 @@ backend/node_modules/
 # Ignore environment files
 frontend/.env
 backend/.env
+
+# Ignore build files
+frontend/build/
+backend/build/
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore system files
+.DS_Store
+
+# Ignore VS Code settings
+.vscode/

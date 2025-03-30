@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { setOnlineUsers } from "../features/auth/authSlice.js";
 
-export const socket = io("http://localhost:5000", {
+export const socket = io("https://nexachat-backend.onrender.com", {
   autoConnect: false,
 });
 

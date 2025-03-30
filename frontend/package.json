@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "start": "vite preview",
+  "serve": "vite preview",
+  "lint": "eslint ."
+}
+,
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.0",
     "@tailwindcss/vite": "^4.0.9",

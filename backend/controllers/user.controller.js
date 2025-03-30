@@ -4,7 +4,7 @@ import User from "../models/user.model.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import CustomError from "../utils/customError.js";
 import generateToken from "../utils/generateToken.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { io, onlineUsers } from "../utils/socket.js";
 
 export const registerUser = asyncWrapper(async (req, res) => {

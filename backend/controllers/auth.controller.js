@@ -38,7 +38,7 @@ export const registerUser = asyncWrapper(async (req, res) => {
 
   res.cookie("token", token, {
     httpOnly: true, // Prevent Cross site scripting (XSS) error
-    sameSite: "none", // Prevent Cross site request forgrey (CSRF) error
+    sameSite: "strict", // Prevent Cross site request forgrey (CSRF) error
     maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie will expire in 7 days
     secure: process.env.NODE_ENV === "production", // Use (https) in Production mode else (http)
   });
@@ -67,7 +67,7 @@ export const loginUser = asyncWrapper(async (req, res) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     secure: process.env.NODE_ENV === "production",
   });
@@ -147,6 +147,12 @@ export const searchUser = asyncWrapper(async (req, res) => {
 });
 
 export const logout = (req, res) => {
-  res.clearCookie("token");
+  res.cookie("token", "", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+    expires: new Date(0),
+  });
+
   res.status(200).json({ message: "Logout Successful" });
 };

@@ -6,7 +6,7 @@ import {
   registerUser,
   searchUser,
   updateProfile,
-} from "../controllers/user.controller.js";
+} from "../controllers/auth.controller.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import { uploadImage } from "../middlewares/upload.js";
 const router = express.Router();

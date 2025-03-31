@@ -1,4 +1,16 @@
 {
-    "rewrites": [{ "source": "/**", "destination": "/index.html" }]
-}
+    "rewrites": [
+      {
+        "source": "/api/:path*",
+        "destination": "https://nexachat-backend.onrender.com/api/:path*"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/index.html",
+        "statusCode": 200
+      }
+    ]
+  }
   

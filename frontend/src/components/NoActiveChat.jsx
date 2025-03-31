@@ -10,7 +10,7 @@ const NoActiveChat = () => {
   // Loading
   if (isCreatingChat || isCreatingGroupChat) {
     return (
-      <div className={`sm:flex-1 p-4`}>
+      <div className={`sm:flex-1 p-4 hidden sm:block`}>
         <div className="bg-base-100 w-full h-full rounded-xl flex items-center justify-center space-x-3">
           {isCreatingChat && <div className="text-xl">Creating Chat</div>}
           {isCreatingGroupChat && <div className="text-xl">Creating Group</div>}

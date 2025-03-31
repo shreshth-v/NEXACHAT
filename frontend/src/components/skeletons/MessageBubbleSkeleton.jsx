@@ -2,7 +2,7 @@ import React from "react";
 
 const MessageBubbleSkeleton = () => {
   return (
-    <div className="flex w-full flex-col gap-8 sm:gap-4">
+    <div className="flex w-full flex-col gap-9 sm:gap-4">
       <div className="flex items-center gap-4">
         <div className="skeleton size-12 sm:size-14 shrink-0 rounded-full"></div>
         <div className="flex flex-col gap-4">

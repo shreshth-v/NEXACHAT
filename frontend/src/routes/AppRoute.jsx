@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "../features/auth/authSlice";
 import ProtectedRoute from "./ProtectedRoute";
 import UnProtectedRoute from "./UnProtectedRoute";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const AppRoute = () => {
   const dispatch = useDispatch();
@@ -71,6 +72,7 @@ const AppRoute = () => {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </div>

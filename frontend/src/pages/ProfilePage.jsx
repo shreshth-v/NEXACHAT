@@ -113,7 +113,7 @@ const ProfilePage = () => {
 
         {/* Submit Button  */}
         <div className="mb-4">
-          <button className="btn btn-primary w-full">Update Porfile</button>
+          <button className="btn btn-primary w-full">Update Profile</button>
         </div>
       </form>
     </div>

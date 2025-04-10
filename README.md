@@ -6,6 +6,10 @@ Live Demo: https://nexachat-five.vercel.app
 Email: testuser@example.com
 Password: 123456
 
+🔑 Test User 2 Credentials
+Email: testuser2@example.com
+Password: 123456
+
 NexaChat is a real-time chat application built using the MERN stack (MongoDB, Express, React, Node.js) with WebSocket support via Socket.io. It allows users to engage in one-on-one and group chats with real-time updates and additional features like AI-powered responses.
 
 🚀 Features

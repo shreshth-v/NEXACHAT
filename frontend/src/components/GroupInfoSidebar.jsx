@@ -175,7 +175,7 @@ const GroupInfoSidebar = () => {
 
             {/* Group Name Input */}
             {isGroupNameEditable && (
-              <div className="grid grid-cols-12 gap-2 items-center">
+              <div className="grid grid-cols-12 gap-2 items-center h-16">
                 {/* First Row */}
                 <input
                   type="text"
